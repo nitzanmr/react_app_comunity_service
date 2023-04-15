@@ -18,6 +18,9 @@ The project is aimed at creating an application to make it easier for teen volun
 -Be scalable to accommodate a growing user base and increasing data volume.  
 -The system must consistently perform well and handle high traffic without downtime or errors.  
 
+# Project UML
+[Link to UML diagram](/UMLdiagram.pdf)
+
 # About the Organization 
 "L'Oru Nalech" is an educational center for volunteering, operating in hundreds of high schools. It offers various volunteering activities such as:
 
