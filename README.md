@@ -21,6 +21,9 @@ The project is aimed at creating an application to make it easier for teen volun
 # Project UML
 [Link to UML diagram](/UMLdiagram.pdf)
 
+# App Design Prototype
+[App Design Prototype](https://app.uizard.io/prototypes/4o6zYmjYEeurzApK1rgV)
+
 # About the Organization 
 "L'Oru Nalech" is an educational center for volunteering, operating in hundreds of high schools. It offers various volunteering activities such as:
 
