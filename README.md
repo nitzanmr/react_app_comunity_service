@@ -19,7 +19,7 @@ The project is aimed at creating an application to make it easier for teen volun
 -The system must consistently perform well and handle high traffic without downtime or errors.  
 
 # Project UML
-[Link to UML diagram](/UML FOR L Oro Nelech.pdf)
+[Link to UML diagram](https://github.com/nitzanmr/react_app_comunity_service/blob/main/UML%20FOR%20L%20Oro%20Nelech.pdf)
 
 # App Design Prototype
 [App Design Prototype](https://app.uizard.io/p/be144ca1)
