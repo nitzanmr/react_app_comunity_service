@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     marginRight: 10,
-    resizeMode: "cover",
   },
   pdfInfo: {
     flex: 1,

@@ -1,54 +1,86 @@
+//added first name,last name,adress,tshirt size fields with icons -mousa
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
-import Icon from "react-native-vector-icons/FontAwesome";
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ProfileScreen = () => {
-  const [name, setName] = useState('John Doe');
-  const [email, setEmail] = useState('johndoe@example.com');
-  const [age, setAge] = useState('2');
-
-
-
-
-  // the frist and second, id, location
-
-  
-
-
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [id, setID] = useState('');
+  const [address, setAddress] = useState('');
+  const [shirtSize, setShirtSize] = useState('S');
 
   const handleSave = () => {
     // Save the changes to the user's profile
-    console.log('Saving changes:', name, email, age);
+    console.log('Saving changes:', firstName, lastName, id, address, shirtSize);
   };
 
   return (
     <View style={styles.container}>
-      <Icon name="user-circle" size={50} color="#000" />
+      <View style={styles.fieldContainer}>
+        <Icon name="user-circle" size={100} color="#000" style={styles.profileIcon} />
+      </View>
 
-      <Text style={styles.title}>Profile</Text>
+      <Text style={styles.title}>פרופיל</Text>
 
-      <Text style={styles.label}>Name:</Text>
+      <View style={styles.fieldContainer}>
+        <Icon name="user" size={20} color="#000" style={styles.icon} />
+        <Text style={styles.label}>שם פרטי:</Text>
+      </View>
       <TextInput
         style={styles.input}
-        value={name}
-        onChangeText={(text) => setName(text)}
+        placeholder="הכנס שם פרטי"
+        value={firstName}
+        onChangeText={(text) => setFirstName(text)}
       />
 
-      <Text style={styles.label}>Email:</Text>
+      <View style={styles.fieldContainer}>
+        <Icon name="user" size={20} color="#000" style={styles.icon} />
+        <Text style={styles.label}>שם משפחה:</Text>
+      </View>
       <TextInput
         style={styles.input}
-        value={email}
-        onChangeText={(text) => setEmail(text)}
+        placeholder="הכנס שם משפחה"
+        value={lastName}
+        onChangeText={(text) => setLastName(text)}
       />
 
-      <Text style={styles.label}>shirt size:</Text>
+      <View style={styles.fieldContainer}>
+        <Icon name="id-card" size={20} color="#000" style={styles.icon} />
+        <Text style={styles.label}>תעודת זהות:</Text>
+      </View>
       <TextInput
         style={styles.input}
-        value={age}
-        onChangeText={(text) => setAge(text)}
+        placeholder="הכנס תעודת זהות"
+        value={id}
+        onChangeText={(text) => setID(text)}
       />
 
-      <Button title="Save Changes" onPress={handleSave} />
+      <View style={styles.fieldContainer}>
+        <Icon name="map-marker" size={20} color="#000" style={styles.icon} />
+        <Text style={styles.label}>כתובת:</Text>
+      </View>
+      <TextInput
+        style={styles.input}
+        placeholder="הכנס כתובת"
+        value={address}
+        onChangeText={(text) => setAddress(text)}
+      />
+
+      <Text style={styles.label}>מידת חולצה:</Text>
+      <Picker
+        style={styles.picker}
+        selectedValue={shirtSize}
+        onValueChange={(itemValue) => setShirtSize(itemValue)}
+      >
+        <Picker.Item label="S" value="S" />
+        <Picker.Item label="M" value="M" />
+        <Picker.Item label="L" value="L" />
+        <Picker.Item label="XL" value="XL" />
+      </Picker>
+
+      <Button title="שמירת שינויים" onPress={handleSave} />
     </View>
   );
 };
@@ -71,17 +103,31 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontWeight: 'bold',
   },
-  label: {
+  fieldContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 8,
+  },
+  icon: {
+    marginRight: 8,
+  },
+  label: {
     fontWeight: 'bold',
+    textAlign: 'right',
   },
   input: {
     height: 40,
-    width :300,
+    width: 300,
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+    textAlign: 'right',
+  },
+  picker: {
+    width: 300,
+    marginBottom: 16,
+    textAlign: 'center',
   },
 });
 
