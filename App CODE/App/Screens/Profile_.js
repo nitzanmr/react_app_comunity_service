@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const ProfileScreen = () => {
   const [name, setName] = useState('John Doe');
@@ -22,32 +23,29 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../../App/assets/th.jpeg')}
-        style={styles.profileIcon}
-      />
+      <Icon name="user-circle" size={50} color="#000" />
 
       <Text style={styles.title}>Profile</Text>
-      
+
       <Text style={styles.label}>Name:</Text>
       <TextInput
         style={styles.input}
         value={name}
-        onChangeText={text => setName(text)}
+        onChangeText={(text) => setName(text)}
       />
 
       <Text style={styles.label}>Email:</Text>
       <TextInput
         style={styles.input}
         value={email}
-        onChangeText={text => setEmail(text)}
+        onChangeText={(text) => setEmail(text)}
       />
 
       <Text style={styles.label}>shirt size:</Text>
       <TextInput
         style={styles.input}
         value={age}
-        onChangeText={text => setAge(text)}
+        onChangeText={(text) => setAge(text)}
       />
 
       <Button title="Save Changes" onPress={handleSave} />

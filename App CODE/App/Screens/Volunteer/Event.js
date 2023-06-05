@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Text,  StyleSheet, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Icon from "react-native-vector-icons/FontAwesome";
-
+// import {collection , doc, getDoc,setDoc} from 'firebase/firestore'
+// import { firebase } from "@react-native-firebase/auth";
+// import { FIREBASE_AUTH, FIREBASE_DB }from "./firebaseConfig"
 
 
 function EventList() {
