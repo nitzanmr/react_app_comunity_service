@@ -5,17 +5,24 @@ import {
   FlatList,
   Text,
   Modal,
+  TouchableOpacity,
   TextInput,
   Button,
+  Platform,
 } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { Picker } from "@react-native-picker/picker";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const Inbox = ({ navigation }) => {
+  const myid = "idSen";
   const [newMessageModalVisible, setNewMessageModalVisible] = useState(false);
   const [newMessage, setNewMessage] = useState({
     subject: "",
-    receiver: "",
+    receiver: "regional manager",
     body: "",
   });
+  const [selectedMessage, setSelectedMessage] = useState(null); // Added state for the selected message
 
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,47 +35,40 @@ const Inbox = ({ navigation }) => {
             id: 1,
             subject: "Meeting",
             receiver: "Mahmoud",
-            sender: "ADMIN",
-            masseges: [
-              { text: "Hi there!", destination: "Other" },
-              { text: "Hello!", destination: "Me" },
-            ],
+            fromId: "Admin",
+            toId: "idSen",
             body: "Just a reminder that we have a meeting tomorrow at 2 PM.",
           },
           {
             id: 2,
             subject: "Vacation Request",
-            receiver: "Jane Smith",
+            receiver: "sckool manager",
+            fromId: "idSen",
+            toId: "ss",
             body: "Hi, I wanted to request some time off next week for a family vacation.",
           },
           {
             id: 3,
             subject: "New Project Proposal",
-            receiver: "Bob Johnson",
+            receiver: "Mahmoud",
+            fromId: "ss",
+            toId: "idSen",
             body: "I have a new project proposal that I would like to discuss with you.",
           },
           {
             id: 4,
             subject: "New Project Proposal",
-            receiver: "Bob Johnson",
+            receiver: "sckool manager",
+            fromId: "idSen",
+            toId: "ss",
             body: "I have a new project proposal that I would like to discuss with you.",
           },
           {
             id: 5,
             subject: "New Project Proposal",
-            receiver: "Bob Johnson",
-            body: "I have a new project proposal that I would like to discuss with you.",
-          },
-          {
-            id: 6,
-            subject: "New Project Proposal",
-            receiver: "Bob Johnson",
-            body: "I have a new project proposal that I would like to discuss with you.",
-          },
-          {
-            id: 7,
-            subject: "New Project Proposal",
-            receiver: "Bob Johnson",
+            receiver: "Mahmoud",
+            fromId: "ss",
+            toId: "idSen",
             body: "I have a new project proposal that I would like to discuss with you.",
           },
         ]);
@@ -82,17 +82,51 @@ const Inbox = ({ navigation }) => {
     fetchData();
   }, []);
 
-  const renderMessage = ({ item }) => {
-    const handlePress = () => {
-      navigation.navigate("SendMessage", { message: item });
-    };
+  const SelectBox = ({ options, selectedValue, onValueChange }) => {
+    const pickerStyle =
+      Platform.OS === "ios" ? styles.pickerIOS : styles.picker;
 
     return (
-      <View style={styles.messageContainer} onPress={handlePress}>
-        <Text style={styles.messageSubject}>{item.subject}</Text>
-        <Text style={styles.messageSender}>{item.receiver}</Text>
-        <Text style={styles.messageBody}>{item.body}</Text>
-      </View>
+      <Picker
+        style={pickerStyle}
+        selectedValue={selectedValue}
+        onValueChange={onValueChange}
+      >
+        {options.map((option) => (
+          <Picker.Item
+            key={option.value}
+            label={option.label}
+            value={option.value}
+          />
+        ))}
+      </Picker>
+    );
+  };
+
+  const renderMessage = ({ item }) => {
+    const handlePress = () => {
+      setSelectedMessage(item); // Set the selected message when pressed
+    };
+
+    let actionIcon = null;
+    if (item.fromId === myid) {
+      actionIcon = <Icon name="paper-plane" size={30} />;
+    } else if (item.toId === myid) {
+      actionIcon = <Icon name="envelope" size={30} />;
+    }
+
+    return (
+      <TouchableOpacity style={styles.messageContainer} onPress={handlePress}>
+        <View style={styles.icon}>{actionIcon}</View>
+        <View style={styles.messageContent}>
+          <Text style={styles.messageSubject}>{item.subject}</Text>
+          <Text style={styles.messageSender}>
+            {item.fromId === myid
+              ? "To: " + item.receiver
+              : ""}
+          </Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -101,18 +135,28 @@ const Inbox = ({ navigation }) => {
   };
 
   const handleNewMessageSubmit = () => {
-    // Create a new message with a unique ID
-    const newId = messages.length + 1;
-    const newMessageWithId = { ...newMessage, id: newId };
+    const { subject, receiver, body } = newMessage;
 
-    // Add the new message to the messages array
-    const updatedMessages = [...messages, newMessageWithId];
-    setMessages(updatedMessages);
+    // Create a new message object with a unique ID
+    const newMessageObject = {
+      id: messages.length + 1,
+      subject,
+      receiver,
+      fromId: myid,
+      toId: receiver,
+      body,
+    };
 
-    // Reset the new message state and close the modal
-    setNewMessage({ subject: "", receiver: "", body: "" });
+    setMessages([...messages, newMessageObject]);
     setNewMessageModalVisible(false);
+    setNewMessage({ subject: "", receiver: "school manager", body: "" });
   };
+
+  const options = [
+    { label: "Admin", value: "admin" },
+    { label: "school manager", value: "school manager" },
+    { label: "regional manager", value: "regional manager" },
+  ];
 
   return (
     <View style={styles.container}>
@@ -127,40 +171,58 @@ const Inbox = ({ navigation }) => {
             ItemSeparatorComponent={() => <View style={styles.separator} />}
           />
           <Button title="New Message" onPress={handleNewMessage} />
+          <View style={styles.footerContainer}>
+            <View style={styles.line} />
+          </View>
         </View>
       )}
       <Modal visible={newMessageModalVisible}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>New Message</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Subject"
-            onChangeText={(text) =>
-              setNewMessage({ ...newMessage, subject: text })
-            }
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Receiver"
-            onChangeText={(text) =>
-              setNewMessage({ ...newMessage, receiver: text })
-            }
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Message Body"
-            multiline={true}
-            onChangeText={(text) =>
-              setNewMessage({ ...newMessage, body: text })
-            }
-          />
-          <View style={styles.modalButtons}>
-            <Button
-              title="Cancel"
-              onPress={() => setNewMessageModalVisible(false)}
-            />
-            <Button title="Submit" onPress={handleNewMessageSubmit} />
+        <KeyboardAwareScrollView>
+          <View style={styles.modalCont}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>New Message</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Subject"
+                placeholderTextColor="#999"
+                onChangeText={(text) =>
+                  setNewMessage({ ...newMessage, subject: text })
+                }
+              />
+              <View style={styles.input}>
+                <SelectBox
+                  options={options}
+                  selectedValue={newMessage.receiver}
+                  onValueChange={(value) =>
+                    setNewMessage({ ...newMessage, receiver: value })
+                  }
+                />
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholderTextColor="#999"
+                placeholder="Message Body"
+                multiline={true}
+                onChangeText={(text) =>
+                  setNewMessage({ ...newMessage, body: text })
+                }
+              />
+              <View style={styles.modalButtons}>
+                <Button
+                  title="Cancel"
+                  onPress={() => setNewMessageModalVisible(false)}
+                />
+                <Button title="Submit" onPress={handleNewMessageSubmit} />
+              </View>
+            </View>
           </View>
+        </KeyboardAwareScrollView>
+      </Modal>
+      <Modal visible={selectedMessage !== null}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>{selectedMessage?.subject}</Text>
+          <Text style={styles.messageBody}>{selectedMessage?.body}</Text>
+          <Button title="Close" onPress={() => setSelectedMessage(null)} />
         </View>
       </Modal>
     </View>
@@ -168,73 +230,87 @@ const Inbox = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  modalCont: { marginHorizontal: 0, marginTop:200, },
   container: {
     flex: 1,
-    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   messagesContainer: {
     flex: 1,
+    alignSelf: "stretch",
+    paddingHorizontal: 16,
   },
   messageContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    flexDirection: "row",
+    paddingVertical: 12,
+  },
+  icon: {
+    marginRight: 16,
+  },
+  messageContent: {
+    flex: 1,
   },
   messageSubject: {
-    fontSize: 18,
     fontWeight: "bold",
+    fontSize: 16,
   },
   messageSender: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  messageBody: {
     fontSize: 14,
   },
   separator: {
     height: 1,
-    backgroundColor: "#ddd",
+    backgroundColor: "#ccc",
   },
-  messageContent: {
-    flex: 2,
-    justifyContent: "center",
+  footerContainer: {
+    paddingVertical: 12,
     alignItems: "center",
   },
-  subject: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  receiver: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  body: {
-    fontSize: 16,
-  },
-  placeholder: {
-    fontSize: 18,
-    color: "#999",
+  line: {
+    width: "90%",
+    height: 1,
+    backgroundColor: "#ccc",
   },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
   },
   modalTitle: {
-    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    fontSize: 20,
+    marginBottom: 16,
   },
   input: {
-    width: "100%",
-    height: 40,
+    width: "90%",
+    padding: 8,
+    marginBottom: 16,
+    borderRadius: 4,
     borderWidth: 1,
-    borderColor: "#ddd",
-    paddingHorizontal: 10,
-    marginBottom: 10,
+    borderColor: "#ccc",
   },
   modalButtons: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
+    justifyContent: "space-around",
+    width: "60%",
+  },
+  picker: {
+    flex: 1,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  pickerIOS: {
+    flex: 1,
+    height: 150, // Adjust the height as needed for iOS
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 20,
   },
 });
 

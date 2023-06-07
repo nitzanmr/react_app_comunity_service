@@ -1,80 +1,56 @@
 import React, { useState, useEffect } from "react";
-import { View, Text,  StyleSheet, TouchableOpacity } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {
+  View,
+  FlatList,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-// import {collection , doc, getDoc,setDoc} from 'firebase/firestore'
-// import { firebase } from "@react-native-firebase/auth";
-// import { FIREBASE_AUTH, FIREBASE_DB }from "./firebaseConfig"
-
 
 function EventList() {
   const [loading, setLoading] = useState(true);
-  const [events, setEvent] = useState([]);
-
+  const [eventss, setEvent] = useState([]);
+  const [reEvents, setReEvents] = useState([]);
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setReEvents([
+          {
+            id: 1,
+            title: "lol",
+            description: "day after day",
+            fromDate: "May 25, 2023",
+            toDate: "May 25, 2024",
+            volunteerPlace: "City",
+            daysWeekly: ["Sunday", "Monday"],
+            hours: 5,
+            approvedDay: [],
+          },
+        ]);
         setEvent([
           {
             id: 1,
-            title: "Sample Event 1",
-            description:
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            title: "lol",
+            description: "day after day",
             date: "May 25, 2023",
             location: "New York City, NY",
             hours: 5,
           },
           {
             id: 2,
-            title: "Sample Event 2",
-            description: "Pellentesque euismod magna vel faucibus rhoncus.",
+            title: "why",
+            description: "why the birds fly",
             date: "June 1, 2023",
             location: "Los Angeles, CA",
             hours: 5,
           },
-          ,
           {
             id: 3,
-            title: "Sample Event 2",
-            description: "Pellentesque euismod magna vel faucibus rhoncus.",
-            date: "June 1, 2023",
-            location: "Los Angeles, CA",
-            hours: 5,
-          },
-          ,
-          {
-            id: 4,
-            title: "Sample Event 2",
-            description: "Pellentesque euismod magna vel faucibus rhoncus.",
-            date: "June 1, 2023",
-            location: "Los Angeles, CA",
-            hours: 5,
-          },
-          ,
-          {
-            id: 5,
-            title: "Sample Event 2",
-            description: "Pellentesque euismod magna vel faucibus rhoncus.",
-            date: "June 1, 2023",
-            location: "Los Angeles, CA",
-            hours: 5,
-          },
-          ,
-          {
-            id: 6,
-            title: "Sample Event 2",
-            description: "Pellentesque euismod magna vel faucibus rhoncus.",
-            date: "June 1, 2023",
-            location: "Los Angeles, CA",
-            hours: 5,
-          },
-          ,
-          {
-            id: 7,
-            title: "Sample Event 2",
-            description: "Pellentesque euismod magna vel faucibus rhoncus.",
+            title: "why",
+            description: "why the birds fly",
             date: "June 1, 2023",
             location: "Los Angeles, CA",
             hours: 5,
@@ -98,30 +74,68 @@ if (loading) {
     </View>
   );
 }
+const renderEvents = ({ item }) => {
+  return (
+    <View key={item.id} style={styles.event}>
+      <Icon name="calendar" size={70} color="#000" style={styles.eventPhoto} />
+      <View style={styles.eventDetails}>
+        <Text style={styles.eventTitle}>{item.title}</Text>
+        <Text style={styles.eventDescription}>{item.description}</Text>
+        <Text style={styles.eventDate}>{item.date}</Text>
+        <Text style={styles.eventLocation}>{item.location}</Text>
+        <Text>hours : {item.hours}</Text>
+      </View>
+    </View>
+  );
+};
 
+const renderReEvents = ({ item }) => {
+  return (
+    <View key={item.id} style={styles.event}>
+      <Icon name="calendar" size={70} color="#000" style={styles.eventPhoto} />
+      <View style={styles.eventDetails}>
+        <Text style={styles.eventTitle}>{item.title}</Text>
+        <Text style={styles.eventDescription}>{item.description}</Text>
+        <Text style={styles.eventDate}>Start Date : {item.fromDate}</Text>
+        <Text style={styles.eventDate}>to Date :{item.toDate}</Text>
+        <Text style={styles.eventLocation}>
+          volunteer at : {item.volunteerPlace}
+        </Text>
+        <Text>hours : {item.hours}</Text>
+      </View>
+      <View>
+      </View>
+    </View>
+  );
+};
 
 
   return (
-    <KeyboardAwareScrollView style={styles.eventList}>
-      {events.map((event) => (
-        <View key={event.id} style={styles.event}>
-          <Icon
-            name="calendar"
-            size={70}
-            color="#000"
-            style={styles.eventPhoto}
-          />
+    <View style={styles.eventList}>
+      <Text style={styles.title}>אירועים מיוחדים</Text>
+      <View style={styles.footerContainer}>
+        <View style={styles.line} />
+      </View>
+      <FlatList
+        data={eventss}
+        renderItem={renderEvents}
+        keyExtractor={(item) => item.id.toString()}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
 
-          <View style={styles.eventDetails}>
-            <Text style={styles.eventTitle}>{event.title}</Text>
-            <Text style={styles.eventDescription}>{event.description}</Text>
-            <Text style={styles.eventDate}>{event.date}</Text>
-            <Text style={styles.eventLocation}>{event.location}</Text>
-            <Text style={styles.eventHours}>Hours: {event.hours}</Text>
-          </View>
-        </View>
-      ))}
-    </KeyboardAwareScrollView>
+      <Text style={styles.title}>התנדבויות שבועיות</Text>
+      <View style={styles.footerContainer}>
+        <View style={styles.line} />
+      </View>
+      <FlatList
+        data={reEvents}
+        renderItem={renderReEvents}
+        keyExtractor={(item) => item.id.toString()}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+      />
+      <View style={styles.buttonContainer}>
+      </View>
+    </View>
   );
 }
 

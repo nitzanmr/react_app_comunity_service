@@ -7,7 +7,11 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function App() {
   const volunteerName = "Mahmoud"; // Replace with the actual name variable
-
+    const currentDate = new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   const htmlCertificate = `
   <html>
     <head>
@@ -46,18 +50,18 @@ export default function App() {
     </head>
     <body>
       <div class="certificate">
-        <h1>Certificate of Volunteerism</h1>
-        <p>This is to certify that</p>
+        <h1>תעודת הוקרה למתנדב</h1>
+        <p>תעודה זו מוענקת ל</p> 
         <h2>${volunteerName}</h2>
-        <p>has dedicated their time and efforts as a volunteer in</p>
+        <p>אשר תרם את מזמנו וכישוריו כמתנדב ב</p>  
         <h3>לאורו נלך</h3>
+       <p> ${currentDate} :בתאריך</p>
       </div>
     </body>
   </html>
 `;
 
-
-  const totalHours = 10; 
+  const totalHours = 10;
 
   const cssStyles = `
   <style>
@@ -94,11 +98,7 @@ export default function App() {
   </style>
 `;
 
-  const currentDate = new Date().toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+
 
   const htmlHoursCertificate = `
   <html>
@@ -107,12 +107,12 @@ export default function App() {
     </head>
     <body>
       <div class="certificate">
-        <h1>Certificate of Completion</h1>
-        <p>This is to certify that</p>
-        <h2>Your Name</h2>
-        <p>has successfully completed</p>
-        <h3>${totalHours} Hours of Training</h3>
-        <p>Date: ${currentDate}</p>
+        <h1>אישור שעות</h1>
+        <p>תעודה זו מוענקת</p>
+        <h2>${volunteerName}</h2>
+        <p>סיים בהצלחה </p>
+        <h3>${totalHours} שעות התנדבות</h3>
+        <p> ${currentDate} :בתאריך</p>
       </div>
     </body>
   </html>

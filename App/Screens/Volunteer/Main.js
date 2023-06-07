@@ -129,9 +129,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f0f0f0",
   },
-  footerText: {
-    color: "gray",
-  },
   line: {
     marginBottom: 20,
     width: "100%",
