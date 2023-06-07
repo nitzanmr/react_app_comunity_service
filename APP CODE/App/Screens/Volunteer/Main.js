@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Text,  TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const MainScreen = ({ navigation }) => {
+const MainScreen = ({ route, navigation }) => {
+  const vid = route.params;
 
     const handleNavigate = (screenName) => {
-        navigation.navigate(screenName);
+        navigation.navigate(screenName, vid);
     }
     const handleProfile = () => {
         navigation.navigate('Profile');
