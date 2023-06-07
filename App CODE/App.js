@@ -1,19 +1,21 @@
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-/* general */
-import WelcomeScreen from "./App/Screens/WelcomeScreen";
-import inbox from "./App/Screens/Volunteer/inbox";
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+        
+ /* general */
+import WelcomeScreen from './App/Screens/WelcomeScreen';
+import SendMessage from './App/Screens/SendMessage';
+import inbox from './App/Screens/inbox';
 import Profile from "./App/Screens/Profile_";
 
 /* Volunteer */
 import Main from "./App/Screens/Volunteer/Main";
-import Event from "./App/Screens/Volunteer/Event";
-import pdf from "./App/Screens/Volunteer/pdf";
-import Certificates from "./App/Screens/Volunteer/Certificates";
-import Hours from "./App/Screens/Volunteer/Hours";
+import Event from './App/Screens/Volunteer/event';
+import pdf from './App/Screens/Volunteer/pdf';
+import Volunteer from './App/Screens/Volunteer/Volunteer';
+import Certificates from './App/Screens/Volunteer/Certificates';
+import Hours from './App/Screens/Volunteer/Hours';
 
 /* manager */
 import MainM from "./App/Screens/Manager/MainM";
@@ -37,7 +39,7 @@ export default function App() {
           name="WelcomeScreen"
           component={WelcomeScreen}
         ></Stack.Screen>
-        
+        <Stack.Screen name="SendMessage" component={SendMessage}></Stack.Screen>
         <Stack.Screen name="inbox" component={inbox}></Stack.Screen>
         <Stack.Screen name="Profile" component={Profile}></Stack.Screen>
 
@@ -48,8 +50,9 @@ export default function App() {
           component={Certificates}
         ></Stack.Screen>
         <Stack.Screen name="Main" component={Main}></Stack.Screen>
-        <Stack.Screen name="Event" component={Event}></Stack.Screen>
+        <Stack.Screen name="event" component={Event}></Stack.Screen>
         <Stack.Screen name="pdf" component={pdf}></Stack.Screen>
+        <Stack.Screen name="Volunteer" component={Volunteer}></Stack.Screen>
         <Stack.Screen name="Hours" component={Hours}></Stack.Screen>
 
         {/* manager */}

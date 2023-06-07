@@ -1,48 +1,85 @@
-//improved design so that the events are visually devided,special events are cyan, added transport indicator, made the the feilds clearer -mousa
-
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text,  StyleSheet, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Icon from "react-native-vector-icons/FontAwesome";
 
+
+
 function EventList() {
   const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
+  const [events, setEvent] = useState([]);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setEvents([
+        setEvent([
           {
             id: 1,
-            title: "אירוע דוגמה 1",
-            description: "תיאור אירוע 1",
-            date: "25 מאי 2023",
-            startTime: "10:00",
-            endTime: "15:00",
-            totalHours: 5,
-            exitLocation: "נקודת יציאה",
-            destinationLocation: "מקום פעילות",
-            transportation: true,
-            special: true,
+            title: "Sample Event 1",
+            description:
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            date: "May 25, 2023",
+            location: "New York City, NY",
+            hours: 5,
           },
           {
             id: 2,
-            title: "אירוע דוגמה 2",
-            description: "תיאור אירוע 2",
-            date: "1 יוני 2023",
-            startTime: "14:00",
-            endTime: "18:00",
-            totalHours: 4,
-            exitLocation: "נקודת יציאה",
-            destinationLocation: "מקום פעילות",
-            transportation: false,
-            special: false,
+            title: "Sample Event 2",
+            description: "Pellentesque euismod magna vel faucibus rhoncus.",
+            date: "June 1, 2023",
+            location: "Los Angeles, CA",
+            hours: 5,
           },
-          // Add more events here...
+          ,
+          {
+            id: 3,
+            title: "Sample Event 2",
+            description: "Pellentesque euismod magna vel faucibus rhoncus.",
+            date: "June 1, 2023",
+            location: "Los Angeles, CA",
+            hours: 5,
+          },
+          ,
+          {
+            id: 4,
+            title: "Sample Event 2",
+            description: "Pellentesque euismod magna vel faucibus rhoncus.",
+            date: "June 1, 2023",
+            location: "Los Angeles, CA",
+            hours: 5,
+          },
+          ,
+          {
+            id: 5,
+            title: "Sample Event 2",
+            description: "Pellentesque euismod magna vel faucibus rhoncus.",
+            date: "June 1, 2023",
+            location: "Los Angeles, CA",
+            hours: 5,
+          },
+          ,
+          {
+            id: 6,
+            title: "Sample Event 2",
+            description: "Pellentesque euismod magna vel faucibus rhoncus.",
+            date: "June 1, 2023",
+            location: "Los Angeles, CA",
+            hours: 5,
+          },
+          ,
+          {
+            id: 7,
+            title: "Sample Event 2",
+            description: "Pellentesque euismod magna vel faucibus rhoncus.",
+            date: "June 1, 2023",
+            location: "Los Angeles, CA",
+            hours: 5,
+          },
         ]);
       } catch (error) {
-        console.log("Error fetching events data: ", error);
+        console.log("Error fetching hours data: ", error);
       } finally {
         setLoading(false);
       }
@@ -51,56 +88,34 @@ function EventList() {
     fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.loadingText}>טוען...</Text>
-      </View>
-    );
-  }
+
+if (loading) {
+  return (
+    <View style={styles.container}>
+      <Text>Loading...</Text>
+    </View>
+  );
+}
+
+
 
   return (
     <KeyboardAwareScrollView style={styles.eventList}>
       {events.map((event) => (
-        <View
-          key={event.id}
-          style={[
-            styles.eventContainer,
-            event.special && styles.specialEventContainer,
-          ]}
-        >
-          <View style={styles.calendarContainer}>
-            <Icon name="calendar" size={30} color="#000" style={styles.calendarIcon} />
-          </View>
-          <View style={styles.eventBody}>
+        <View key={event.id} style={styles.event}>
+          <Icon
+            name="calendar"
+            size={70}
+            color="#000"
+            style={styles.eventPhoto}
+          />
+
+          <View style={styles.eventDetails}>
             <Text style={styles.eventTitle}>{event.title}</Text>
             <Text style={styles.eventDescription}>{event.description}</Text>
-            <Text style={styles.eventField}>
-              <Text style={styles.fieldLabel}>תאריך:</Text> {event.date}
-            </Text>
-            <Text style={styles.eventField}>
-              <Text style={styles.fieldLabel}>שעת התחלה:</Text> {event.startTime}
-            </Text>
-            <Text style={styles.eventField}>
-              <Text style={styles.fieldLabel}>שעת סיום:</Text> {event.endTime}
-            </Text>
-            <Text style={styles.eventField}>
-              <Text style={styles.fieldLabel}>סה"כ שעות:</Text> {event.totalHours}
-            </Text>
-            <Text style={styles.eventField}>
-              <Text style={styles.fieldLabel}>יציאה מ:</Text> {event.exitLocation}
-            </Text>
-            <Text style={styles.eventField}>
-              <Text style={styles.fieldLabel}>מיקום הפעילות:</Text> {event.destinationLocation}
-            </Text>
-            <Text style={styles.eventField}>
-              <Text style={styles.fieldLabel}>תחבורה מאורגנת:</Text>{" "}
-              {event.transportation ? (
-                <Text style={styles.checkIcon}>כן</Text>
-              ) : (
-                <Text style={styles.xIcon}>לא</Text>
-              )}
-            </Text>
+            <Text style={styles.eventDate}>{event.date}</Text>
+            <Text style={styles.eventLocation}>{event.location}</Text>
+            <Text style={styles.eventHours}>Hours: {event.hours}</Text>
           </View>
         </View>
       ))}
@@ -109,65 +124,56 @@ function EventList() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingText: {
-    fontSize: 20,
-  },
   eventList: {
     flex: 1,
     padding: 16,
   },
-  eventContainer: {
+  event: {
     flexDirection: "row",
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    backgroundColor:"white"
   },
-  specialEventContainer: {
-    backgroundColor: "cyan", // Change the background color of special events
+  eventPhoto: {
+    width: 100,
+    height: 100,
+    margin: 5,
   },
-  calendarContainer: {
-    marginRight: 10,
-  },
-  calendarIcon: {
-    fontSize: 100,
-  },
-  eventBody: {
+  eventDetails: {
     flex: 1,
-    flexDirection: "column",
+    justifyContent: "center",
   },
   eventTitle: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
   },
   eventDescription: {
-    fontSize: 20,
+    fontSize: 16,
     marginBottom: 8,
   },
-  eventField: {
-    fontSize: 18,
+  eventDate: {
+    fontSize: 14,
     marginBottom: 4,
   },
-  fieldLabel: {
-    fontWeight: "bold",
+  eventLocation: {
+    fontSize: 14,
+    color: "#666",
   },
-  checkIcon: {
-    color: "green",
-    fontWeight: "bold",
-    fontSize: 18,
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#2196F3",
+    borderRadius: 5,
+    padding: 8,
   },
-  xIcon: {
-    color: "red",
+  buttonText: {
+    color: "#fff",
     fontWeight: "bold",
-    fontSize: 18,
+    textAlign: "center",
+    },
+  eventHours: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginTop: 4,
   },
 });
 

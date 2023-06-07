@@ -9,7 +9,7 @@ import { Button } from 'react-native-elements';
 const events = [
   {
     id: 1,
-    title: "lolsss",
+    title: "lol",
     description: "day after day",
     date: "May 25, 2023",
     location: "New York City, NY",
