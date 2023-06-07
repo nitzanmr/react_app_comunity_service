@@ -26,7 +26,7 @@ const SelectBox = ({ options, selectedValue, onValueChange }) => {
 };
 
 const VolunteerHoursPage = ({route, navigation}) => {
-  const uid = route.params;
+  const vid = route.params;
   const currentDate = new Date();
   const [selectedYear, setSelectedYear] = useState(
     currentDate.getFullYear().toString()
@@ -66,11 +66,10 @@ const VolunteerHoursPage = ({route, navigation}) => {
     const fetchData = async () => {
       try {
         // Fetch hours data...
-        console.log(typeof uid);
-        const q = query(collection(FIREBASE_DB, 'Hours'), where('VID', '==', uid));
+        const q = query(collection(FIREBASE_DB, 'Hours'), where('VID', '==', vid));
         const querySnapshot = await getDocs(q);
         if (querySnapshot.empty){
-          console.log("found nothing");
+          console.log("didnt find any hours for this volunteer");
         }
         else{
           console.log("found hours");

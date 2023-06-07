@@ -6,6 +6,7 @@ import { getDoc, collection, doc, setDoc, query, where, getDocs} from 'firebase/
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState(''); // TODO: front-add box to enter user name at register
   const [password, setPassword] = useState('');
   const [layerCode, setLayerCode] = useState('');
   const [registerMode, setRegisterMode] = useState(false);
@@ -16,19 +17,23 @@ const LoginScreen = ({ navigation }) => {
         console.log("logged in, checking user type");
         const docSnap = await getDoc(doc(FIREBASE_DB, 'users', userCredential.user.uid));
         if (docSnap.exists()) {
-          if (docSnap.get('userType') == 1) navigation.navigate("Main", userCredential.user);
-          else if (docSnap.get('userType') == 2) navigation.navigate("MainM");
-          else if (docSnap.get('userType') == 3) navigation.navigate("MainMT");
-          else if (docSnap.get('userType') == 4) navigation.navigate("MainMS");
+          const userID = String(docSnap.get('layer')); // user id
+          const layers = userID.split('.');
+          // TODO: testing - test if logging in to each type of user
+          if (layers.length == 4) navigation.navigate("Main", userID); // user is volunteer
+          else if (layers.length == 3) navigation.navigate("MainM"); // user is school manager
+          else if (layers.length == 2) navigation.navigate("MainMT"); // user is regional manager
+          else if (layers.length == 1) navigation.navigate("MainMS"); // user is admin
           else console.log("valid user type not found");
         } else {
           console.log("ERROR: user data not found");
+          // TODO: front - couldnt log in, user not found
         }
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("Error Code: ", errorCode, "\nError Message: ", errorMessage);
-        // notify the user about the error and suggest action based on error code
+        //TODO :front - alert the email or password is not correct
       });
   };
 
@@ -41,27 +46,37 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleRegisterSubmit = async () => {
+    if (layerCode.split('.').length != 3){
+      console.log("invalid school code");
+      //TODO :front - alert the user that he entered a wrong shool code.
+      return;
+    }
     console.log("registering user...");
-    const q = query(collection(FIREBASE_DB, 'managers'), where('layerCode', '==', this.layerCode));
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty){
-      // invalid school code
-      // request to re-enter school code
+
+    // query check if the manager exists
+    const q = query(collection(FIREBASE_DB, 'users'), where('layer', '==', layerCode));
+    const managerSnapshot = await getDocs(q);
+    if (managerSnapshot.empty){
+      console.log("school not found")
+      //TODO :front - alert the user that he entered a wrong shool code.
+      return;
     }
-    else{
-      createUserWithEmailAndPassword(FIREBASE_AUTH, this.email, this.password).then((userCredential) => {
-        setDoc(doc(collection(FIREBASE_DB, 'users'), userCredential.user.uid), {
-        id: userCredential.user.uid,
-        layerCode: layerCode,
-        });
-        console.log(userCredential.user.email + "  registered successfully!");
-      }).catch((error) => {
-        // error signing up user
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("error code: " + errorCode + ": " + errorMessage);
+
+
+    createUserWithEmailAndPassword(FIREBASE_AUTH, this.email, this.password).then((userCredential) => {
+      setDoc(doc(collection(FIREBASE_DB, 'users'), userCredential.user.uid), {
+        layer: layerCode + "." + userCredential.user.uid,
+        manager: layerCode,
+        name: name,
       });
-    }
+      console.log(userCredential.user.email + "  registered successfully!");
+    }).catch((error) => {
+      // error signing up user
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("error code: " + errorCode + ": " + errorMessage);
+      //TODO :front - alert the user that registration has failed with error code and error message
+    });
   };
 
   if (registerMode) {
