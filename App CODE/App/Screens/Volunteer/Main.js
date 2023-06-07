@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text,  TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const MainScreen = ({ navigation }) => {
@@ -13,9 +13,11 @@ const MainScreen = ({ navigation }) => {
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.profileButton} onPress={handleProfile}>
-          <Icon name="user-circle" size={50} color="#000" />
+          <Image
+            source={require("../../../App/assets/th.jpeg")}
+            style={styles.profileIcon}
+          />
         </TouchableOpacity>
-
         <Image
           source={require("../../../App/assets/logo.webp")}
           style={styles.backgroundImage}
@@ -32,13 +34,20 @@ const MainScreen = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => handleNavigate("Event")}
+            onPress={() => handleNavigate("event")}
           >
             <Icon name="calendar" size={90} color="#000" />
 
             <Text style={styles.buttonText}>Events</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleNavigate("Volunteer")}
+          >
+            <Icon name="handshake-o" size={90} color="#000" />
 
+            <Text style={styles.buttonText}>Volunteer Places</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
             onPress={() => handleNavigate("Certificates")}
@@ -69,10 +78,11 @@ const MainScreen = ({ navigation }) => {
             <Text style={styles.buttonText}>Messages</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.line} />
 
         <View style={styles.footerContainer}>
-          <View style={styles.line} />
+          <Text style={styles.footerText}>
+            All rights reserved
+          </Text>
         </View>
       </View>
     );
@@ -84,21 +94,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f0f0f0",
   },
-
+  
   profileButton: {
     position: "absolute",
     top: 20,
     right: 20,
+    zIndex: 1,
   },
   profileIcon: {
     width: 50,
     height: 50,
   },
   backgroundImage: {
-    height: 100,
-    width: 150,
-    marginBottom: 30,
-    marginTop: 30,
+    height: 200,
+    width: 300,
   },
   buttonContainer: {
     flex: 3,
@@ -113,30 +122,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 150,
     height: 150,
-    backgroundColor: "#D1D5DB",
+    backgroundColor: "#ADD8E6",
     borderRadius: 10,
   },
   buttonText: {
     fontWeight: "bold",
     marginTop: 5,
-  },
-  footerContainer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
-  },
-  footerText: {
-    color: "gray",
-  },
-  line: {
-    marginBottom: 20,
-    width: "100%",
-    height: 1,
-    backgroundColor: "gray",
   },
 });
 
