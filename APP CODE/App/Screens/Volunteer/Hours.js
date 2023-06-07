@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Platform } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { FIREBASE_DB } from '../../firebaseConfig';
+import { Timestamp, query, where, collection, getDocs } from "firebase/firestore";
 
 const SelectBox = ({ options, selectedValue, onValueChange }) => {
   const pickerStyle = Platform.OS === "ios" ? styles.pickerIOS : styles.picker;
@@ -23,7 +25,8 @@ const SelectBox = ({ options, selectedValue, onValueChange }) => {
   );
 };
 
-const VolunteerHoursPage = () => {
+const VolunteerHoursPage = ({route, navigation}) => {
+  const vid = route.params;
   const currentDate = new Date();
   const [selectedYear, setSelectedYear] = useState(
     currentDate.getFullYear().toString()
@@ -31,7 +34,8 @@ const VolunteerHoursPage = () => {
   const [selectedMonth, setSelectedMonth] = useState(
     (currentDate.getMonth() + 1).toString()
   );
-  const [hours, setHours] = useState({});
+  const [hours, setHours] = useState([]);
+  const [totalHours, setTotalHours] = useState();
   const [loading, setLoading] = useState(true);
 
   const currentYear = new Date().getFullYear();
@@ -58,46 +62,34 @@ const VolunteerHoursPage = () => {
   ];
 
   useEffect(() => {
+    setTotalHours(0);
     const fetchData = async () => {
       try {
         // Fetch hours data...
-        setHours({
-          2021: {
-            1: {
-              1: 2,
-              2: 4,
-              3: 2,
-              4: 3,
-            },
-            2: {
-              29: 4,
-              29: 5,
-            },
-            3: {
-              29: 4,
-              29: 5,
-            },
-          },
-          2023: {
-            5: {
-              29: 4,
-              28: 5,
-              1: 2,
-              2: 4,
-              3: 2,
-              4: 3,
-              6: 2,
-            },
-            1: {
-              29: 4,
-              29: 5,
-            },
-            2: {
-              29: 4,
-              29: 5,
-            },
-          },
-        });
+        const q = query(collection(FIREBASE_DB, 'Hours'), where('VID', '==', vid));
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty){
+          console.log("didnt find any hours for this volunteer");
+        }
+        else{
+          console.log("found hours");
+          let hoursArray = new Array();
+          let totHours = 0;
+          querySnapshot.forEach(hour => {
+            const timestamp = new Timestamp(hour.get('from').seconds, hour.get('from').nanoseconds);
+            let date = timestamp.toDate();
+            let mm = date.getMonth() + 1;
+            let dd = date.getDate();
+            let yyyy = date.getFullYear();
+            let duration = hour.get('duration');
+
+            totHours += duration;
+
+            hoursArray.push({day: dd, month: mm, year: yyyy, duration: duration});
+          });
+          setHours(hoursArray);
+          setTotalHours(totHours);
+        }
       } catch (error) {
         console.log("Error fetching hours data: ", error);
       } finally {
@@ -106,18 +98,8 @@ const VolunteerHoursPage = () => {
     };
 
     fetchData();
+
   }, []);
-
-  let totalHours = 0;
-
-  for (const year in hours) {
-    for (const month in hours[year]) {
-      const monthHours = hours[year][month];
-      for (const day in monthHours) {
-        totalHours += monthHours[day];
-      }
-    }
-  }
 
   if (loading) {
     return (
@@ -146,20 +128,15 @@ const VolunteerHoursPage = () => {
           </View>
 
           <Text style={styles.totalHoursText}>Total Hours: {totalHours}</Text>
-          {hours[selectedYear] && hours[selectedYear][selectedMonth] && (
-            <View style={styles.hourSheetContainer}>
-              {Object.entries(hours[selectedYear][selectedMonth]).map(
-                ([day, hour]) => (
-                  <View key={day} style={styles.hourSheetItem}>
-                    <Text style={styles.dayText}>
-                      Date: {selectedYear}/{selectedMonth}/{day}
-                    </Text>
-                    <Text style={styles.hourText}>Hours: {hour}</Text>
-                  </View>
-                )
-              )}
-            </View>
-          )}
+          <View style={styles.hourSheetContainer}>
+            {hours.filter(hour => hour['year'] == selectedYear && hour['month'] == selectedMonth).map(hour => (
+              <View key={hour['day']} style={styles.hourSheetItem}>
+              <Text style={styles.dayText}>Date: {hour['year']}/{hour['month']}/{hour['day']}
+              </Text>
+              <Text style={styles.hourText}>Hours: {hour['duration']}</Text>
+              </View>
+            ))}
+          </View>
         </View>
       </KeyboardAwareScrollView>
       <View style={styles.footerContainer}>
